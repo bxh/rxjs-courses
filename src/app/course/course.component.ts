@@ -62,6 +62,8 @@ export class CourseComponent implements OnInit, AfterViewInit {
                 debug( RxJsLoggingLevel.TRACE, "search "),
                 debounceTime(400),
                 distinctUntilChanged(),
+                // switchMap emits values only from the most recently projected observable.
+                // In this case, we can abort the ongoing search request when a new search key emerges.
                 switchMap(search => this.loadLessons(search)),
                 debug( RxJsLoggingLevel.DEBUG, "lessons value ")
             );

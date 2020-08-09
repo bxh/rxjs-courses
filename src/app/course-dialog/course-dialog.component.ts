@@ -43,6 +43,7 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
         this.form.valueChanges
             .pipe(
                 filter(() => this.form.valid),
+                // one saveCourse req must completes before the next starts.
                 concatMap(changes => this.saveCourse(changes))
             )
             .subscribe();
@@ -66,9 +67,10 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
         fromEvent(this.saveButton.nativeElement, 'click')
             .pipe(
+              // Ignore repeated mouse clicks while a request is being processed.
                 exhaustMap(() => this.saveCourse(this.form.value))
             )
-            .subscribe();
+            .subscribe(); // Without this subscribe() call, no HTTP request would have been made.
 
     }
 
